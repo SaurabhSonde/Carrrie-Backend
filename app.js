@@ -6,6 +6,12 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
+//My Routes
+const authRoutes = require("./routes/auth");
+const userRoutes = require("./routes/user");
+const todoRoutes = require("./routes/todo");
+
+//Database Connection
 mongoose
   .connect(process.env.Database, {
     useNewUrlParser: true,
@@ -23,6 +29,11 @@ mongoose
 app.use(cors());
 app.use(bodyParser.json());
 app.use(cookieParser());
+
+//My Routes
+app.use("/api", authRoutes);
+app.use("/api", userRoutes);
+app.use("/api", todoRoutes);
 
 //Port
 const port = process.env.PORT || 5000;

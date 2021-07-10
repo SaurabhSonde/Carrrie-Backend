@@ -27,10 +27,6 @@ var userSchema = new mongoose.Schema(
       required: true,
     },
     salt: String,
-    todos: {
-      type: Array,
-      default: [],
-    },
   },
   { timestamps: true }
 );

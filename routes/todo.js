@@ -21,7 +21,7 @@ router.param("todoId", getTodoById);
 router.post("/todo/create/:userId", isSignedIn, isAuthenticated, createTodo);
 
 // read routes
-router.get("/todo/:todoId", getTodo);
+router.get("/todo/:todoId/:userId", isSignedIn, isAuthenticated, getTodo);
 
 //delete route
 router.delete("/todo/:todoId/:userId", isSignedIn, isAuthenticated, deleteTodo);

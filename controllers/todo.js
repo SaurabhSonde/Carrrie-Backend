@@ -14,21 +14,32 @@ exports.getTodoById = (req, res, next, id) => {
 };
 
 exports.createTodo = async (req, res) => {
-  const todo = new Todo(req.body);
-  const todos = await Todo.findOne({ userId: req.profile._id }).exec();
+  try {
+    const todo = new Todo(req.body);
+    if (!todo.name || !todo.description || !todo.status || !todo.priority) {
+      return res.status(400).json({
+        error: "Please include all fields.",
+      });
+    }
+    const todos = await Todo.findOne({ userId: req.profile._id }).exec();
 
-  await Todo.create({
-    userId: req.profile._id,
-    name: todo.name,
-    description: todo.description,
-    status: todo.status,
-    priority: todo.priority,
-  });
+    await Todo.create({
+      userId: req.profile._id,
+      name: todo.name,
+      description: todo.description,
+      status: todo.status,
+      priority: todo.priority,
+    });
 
-  todos.todos = todo;
-  await todos.save();
+    todos.todos = todo;
+    await todos.save();
 
-  res.json(todo);
+    res.json(todo);
+  } catch (error) {
+    return res.status(400).json({
+      error: "Failed to save todo in db",
+    });
+  }
 };
 
 exports.getTodo = (req, res) => {
@@ -74,6 +85,11 @@ exports.getAllTodoByUserId = (req, res) => {
     if (err) {
       return res.status(400).json({
         error: "NO todos FOUND",
+      });
+    }
+    if (todos.length === 0) {
+      return res.status(400).json({
+        error: "No todos found.",
       });
     }
     res.json(todos);
